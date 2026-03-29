@@ -19,6 +19,7 @@ export default function Navbar() {
   const [searchOpen, setSearchOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [menuOpen, setMenuOpen] = useState(false);
+  const [notifOpen, setNotifOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
   const searchRef = useRef(null);
 
@@ -33,6 +34,8 @@ export default function Navbar() {
     setSearchOpen(false);
     setQuery("");
     setMenuOpen(false);
+    setNotifOpen(false);
+    setProfileOpen(false);
   }, [location]);
 
   const handleSearch = (e) => {
@@ -53,11 +56,10 @@ export default function Navbar() {
   return (
     <>
       <nav
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-          scrolled
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled
             ? "bg-[#0a0a0f]/95 backdrop-blur-xl border-b border-white/5 shadow-2xl"
             : "bg-gradient-to-b from-black/60 to-transparent"
-        }`}
+          }`}
       >
         <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
@@ -90,11 +92,10 @@ export default function Navbar() {
                 <Link
                   key={to}
                   to={to}
-                  className={`text-sm font-medium transition-colors duration-200 ${
-                    location.pathname === to
+                  className={`text-sm font-medium transition-colors duration-200 ${location.pathname === to
                       ? "text-white"
                       : "text-white/60 hover:text-white"
-                  }`}
+                    }`}
                 >
                   {label}
                 </Link>
@@ -123,11 +124,53 @@ export default function Navbar() {
 
               {isAuthenticated ? (
                 <>
-                  {/* Notifications (decorative) */}
-                  <button className="hidden sm:flex p-2 rounded-full text-white/70 hover:text-white hover:bg-white/10 transition-all relative">
-                    <Bell size={20} />
-                    <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-[#e50914] rounded-full" />
-                  </button>
+                  {/* Notifications */}
+                  <div className="relative hidden sm:block">
+                    <button
+                      onClick={() => { setNotifOpen((v) => !v); setProfileOpen(false); }}
+                      className="p-2 rounded-full text-white/70 hover:text-white hover:bg-white/10 transition-all relative"
+                    >
+                      <Bell size={20} />
+                      <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-[#e50914] rounded-full" />
+                    </button>
+
+                    {notifOpen && (
+                      <div className="absolute right-0 top-full mt-2 w-72 glass rounded-xl shadow-2xl py-2 z-50 animate-fade-in">
+                        <div className="px-4 py-2 border-b border-white/10">
+                          <p className="text-white font-semibold text-sm">Notifications</p>
+                        </div>
+                        {[
+                          { icon: "🎬", text: "New trending movies added", time: "2m ago" },
+                          { icon: "⭐", text: "Top rated list updated", time: "1h ago" },
+                          { icon: "🤖", text: "AI recommendations ready", time: "3h ago" },
+                          { icon: "🎭", text: "New TV shows this week", time: "1d ago" },
+                        ].map((n, i) => (
+                          <div
+                            key={i}
+                            className="flex items-start gap-3 px-4 py-3 hover:bg-white/5 transition-all cursor-pointer"
+                            onClick={() => setNotifOpen(false)}
+                          >
+                            <span className="text-lg mt-0.5">{n.icon}</span>
+                            <div className="flex-1 min-w-0">
+                              <p className="text-white/80 text-sm">{n.text}</p>
+                              <p className="text-white/30 text-xs mt-0.5">{n.time}</p>
+                            </div>
+                            {i === 0 && (
+                              <span className="w-2 h-2 bg-[#e50914] rounded-full mt-1.5 shrink-0" />
+                            )}
+                          </div>
+                        ))}
+                        <div className="px-4 py-2 border-t border-white/10">
+                          <p
+                            className="text-[#e50914] text-xs font-semibold cursor-pointer hover:text-red-400 transition-colors"
+                            onClick={() => setNotifOpen(false)}
+                          >
+                            Mark all as read
+                          </p>
+                        </div>
+                      </div>
+                    )}
+                  </div>
 
                   {/* Profile Dropdown */}
                   <div className="relative">
@@ -289,11 +332,11 @@ export default function Navbar() {
         </div>
       )}
 
-      {/* Click outside to close profile dropdown */}
-      {profileOpen && (
+      {/* Click outside to close dropdowns */}
+      {(profileOpen || notifOpen) && (
         <div
           className="fixed inset-0 z-40"
-          onClick={() => setProfileOpen(false)}
+          onClick={() => { setProfileOpen(false); setNotifOpen(false); }}
         />
       )}
     </>

@@ -9,24 +9,56 @@ import useStore from "../context/store";
 
 function AuthInput({ icon: Icon, type, placeholder, value, onChange, ...rest }) {
   const [show, setShow] = useState(false);
+  const [focused, setFocused] = useState(false);
   const inputType = type === "password" ? (show ? "text" : "password") : type;
 
   return (
     <div className="relative">
-      <Icon size={17} className="absolute left-4 top-1/2 -translate-y-1/2 text-white/30" />
+      <Icon size={17} className="absolute left-4 top-1/2 -translate-y-1/2 z-10" style={{ color: "rgba(255,255,255,0.4)" }} />
       <input
         type={inputType}
         placeholder={placeholder}
         value={value}
         onChange={onChange}
-        className="w-full pl-11 pr-11 py-3.5 bg-white/6 border border-white/10 rounded-xl text-white placeholder-white/25 outline-none focus:border-[#e50914] focus:bg-white/8 transition-all text-sm"
+        onFocus={() => setFocused(true)}
+        onBlur={() => setFocused(false)}
+        style={{
+          width: "100%",
+          paddingLeft: "44px",
+          paddingRight: type === "password" ? "44px" : "16px",
+          paddingTop: "14px",
+          paddingBottom: "14px",
+          backgroundColor: "rgba(255,255,255,0.07)",
+          border: `1.5px solid ${focused ? "#e50914" : "rgba(255,255,255,0.12)"}`,
+          borderRadius: "12px",
+          color: "#ffffff",
+          fontSize: "14px",
+          outline: "none",
+          transition: "border-color 0.2s",
+          fontFamily: "inherit",
+          boxSizing: "border-box",
+          WebkitTextFillColor: "#ffffff",
+          caretColor: "#ffffff",
+        }}
         {...rest}
       />
       {type === "password" && (
         <button
           type="button"
           onClick={() => setShow((v) => !v)}
-          className="absolute right-4 top-1/2 -translate-y-1/2 text-white/30 hover:text-white/60 transition-colors"
+          style={{
+            position: "absolute",
+            right: "14px",
+            top: "50%",
+            transform: "translateY(-50%)",
+            background: "none",
+            border: "none",
+            cursor: "pointer",
+            color: "rgba(255,255,255,0.4)",
+            padding: "0",
+            display: "flex",
+            alignItems: "center",
+          }}
         >
           {show ? <EyeOff size={16} /> : <Eye size={16} />}
         </button>
@@ -266,7 +298,18 @@ function AuthLayout({ children }) {
         </div>
 
         {/* Card */}
-        <div className="glass rounded-2xl p-8 shadow-2xl">{children}</div>
+        <div
+          style={{
+            background: "rgba(18,18,26,0.97)",
+            backdropFilter: "blur(20px)",
+            border: "1px solid rgba(255,255,255,0.08)",
+            borderRadius: "20px",
+            padding: "36px",
+            boxShadow: "0 40px 80px rgba(0,0,0,0.6)",
+          }}
+        >
+          {children}
+        </div>
       </div>
     </div>
   );
