@@ -1,3 +1,4 @@
+
 /**
  * CinemaIQ App
  * Main router and layout
@@ -7,6 +8,7 @@ import React, { useEffect } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import MovieModal from "./components/MovieModal";
+import Footer from "./components/Footer";
 import HomePage from "./pages/Home";
 import { LoginPage, RegisterPage } from "./pages/Auth";
 import { BrowsePage, SearchPage, WatchlistPage, HistoryPage } from "./pages/Browse";
@@ -50,6 +52,9 @@ function AppContent() {
 
       {/* Global Movie Modal */}
       <MovieModal />
+
+      {/* Footer Signature */}
+      <Footer />
     </div>
   );
 }
